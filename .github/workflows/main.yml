@@ -1,0 +1,47 @@
+name: Update
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "gh-pages" branch
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Update image files
+        run: |
+          cd img/
+          wget --convert-links -O index.html http://orteil.dashnet.org/cookieclicker/img/
+          grep -v PARENTDIR index.html | grep '\[IMG' | grep -Po 'a href="\K.*?(?=")' | sed 's/\?.*//' > _imglist.txt
+          wget -N -i _imglist.txt -B http://orteil.dashnet.org/cookieclicker/img/
+          
+      - name: Update sound files
+        run: | 
+          cd snd/
+          wget --convert-links -O index.html http://orteil.dashnet.org/cookieclicker/snd/
+          grep -v PARENTDIR index.html | grep '\[SND' | grep -Po 'a href="\K.*?(?=")' | sed 's/\?.*//' > _sndlist.txt
+          wget -N -i _sndlist.txt -B http://orteil.dashnet.org/cookieclicker/snd/
+      
+      - name: Update translations
+        run: | 
+          cd loc/
+          wget --convert-links -O index.html http://orteil.dashnet.org/cookieclicker/loc/
+          grep -v PARENTDIR index.html | grep '\[ ' | grep -Po 'a href="\K.*?(?=")' | sed 's/\?.*//' > _loclist.txt
+          wget -N -i _loclist.txt -B http://orteil.dashnet.org/cookieclicker/loc/
+      
+      - name: Update JavaScript and HTML files
+        run: |
+          wget -O index.html http://orteil.dashnet.org/cookieclicker/
+          wget -O style.css http://orteil.dashnet.org/cookieclicker/style.css
+          wget -N -i _jslist.txt -B http://orteil.dashnet.org/cookieclicker/
+          wget -O grab.txt http://orteil.dashnet.org/patreon/grab.php
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+           name: cookie-clicker
+           path: /home/runner/work/cookieclicker/cookieclicker  
