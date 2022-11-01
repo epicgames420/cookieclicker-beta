@@ -9,7 +9,7 @@ The original game can be found at http://orteil.dashnet.org/cookieclicker/
 If the original game updates, here is how you can update the mirror:
 
 Prerequisties: 
-1. WSL, Linux terminal, or fork this repository and run the workflow
+WSL, Linux terminal, or fork this repository and run the workflow
 
 #### 1. Fetch all new images :
 
